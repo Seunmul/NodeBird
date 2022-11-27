@@ -37,3 +37,4 @@ fabric.properties
 uploads
 reference
 .vscode
+.env

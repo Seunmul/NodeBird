@@ -1,0 +1,16 @@
+# docker compose yaml file
+version: '0.1'
+services:
+  web:
+    build: .
+    working_dir: /usr/src/app
+    command: npm run dev
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "8001:8001"
+    links:
+      - redis
+  redis:
+    image: redis
+  

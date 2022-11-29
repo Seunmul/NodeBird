@@ -10,14 +10,14 @@ const passport = require("passport");
 
 dotenv.config();
 const pageRouter = require("./routes/page");
-const passportConfig = require("./passport");
+const authRouter = require("./routes/auth");
 const { sequelize } = require("./models");
+const passportConfig = require("./passport");
 
 const app = express(); // express 인스턴스 생성 및 설정
 passportConfig(); // passport 설정
 app.set("port", process.env.PORT || 8001);
 app.set("view engine", "html");
-
 //nunjucks html 렌더링
 nunjucks.configure("views", {
   express: app,
@@ -58,6 +58,7 @@ passport 미들웨어는 express-session 미들웨어보다 뒤에 연결해야�
 */
 
 app.use("/", pageRouter); //페이지 라우터 설정
+app.use("/auth", authRouter); //인증 라우터 설정
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

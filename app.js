@@ -11,6 +11,8 @@ const passport = require("passport");
 dotenv.config();
 const pageRouter = require("./routes/page");
 const authRouter = require("./routes/auth");
+const postRouter = require("./routes/post");
+const userRouter = require("./routes/user");
 const { sequelize } = require("./models");
 const passportConfig = require("./passport");
 
@@ -35,10 +37,12 @@ sequelize
 //midleware 설정
 app.use(morgan("dev")); // 로그
 app.use(express.static(path.join(__dirname, "public"))); // 정적파일 제공
+app.use("/img", express.static(path.join(__dirname, "uploads")));
 app.use(express.json()); // json 형식의 데이터를 받을 수 있게
 app.use(express.urlencoded({ extended: false })); // form 데이터를 받을 수 있게
 app.use(cookieParser(process.env.COOKIE_SECRET)); // 쿠키를 받을 수 있게
-app.use( // 세션을 받을 수 있게
+app.use(
+  // 세션을 받을 수 있게
   session({
     resave: false,
     saveUninitialized: false,
@@ -59,6 +63,8 @@ passport 미들웨어는 express-session 미들웨어보다 뒤에 연결해야�
 
 app.use("/", pageRouter); //페이지 라우터 설정
 app.use("/auth", authRouter); //인증 라우터 설정
+app.use("/post", postRouter); //인증 라우터 설정
+app.use("/user", userRouter); //인증 라우터 설정
 
 app.use((req, res, next) => {
   const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);

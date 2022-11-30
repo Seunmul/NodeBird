@@ -7,15 +7,16 @@ const router = express.Router();
 router.use((req, res, next) => {
   res.locals = {
     user: req.user,
-    followerCount: 0,
-    followingCount: 0,
-    followerIdList: [],
+    followerCount: req.user ? req.user.Followers.length : 0,
+    followingCount: req.user ? req.user.Followings.length : 0,
+    followerIdList: req.user ? req.user.Followings.map((f) => f.id) : [],
   };
+  next();
   // res.locals.user = req.user;
   // res.locals.followerCount = 0;
   // res.locals.followingCount = 0;
   // res.locals.followerIdList = [];
-  next();
+
 });
 
 router.get("/profile", isLoggedIn, (req, res) => {
@@ -26,12 +27,23 @@ router.get("/join", isNotLoggedIn, (req, res) => {
   res.render("join", { title: "회원가입 - NodeBird" });
 });
 
-router.get("/", (req, res, next) => {
-  const twits = [];
-  res.render("main", {
-    title: "NodeBird",
-    twits,
-  });
+router.get("/", async (req, res, next) => {
+  try {
+    const posts = await Post.findAll({
+      include: {
+        model: User,
+        attributes: ["id", "nick"],
+      },
+      order: [["createdAt", "DESC"]],
+    });
+    res.render("main", {
+      title: "NodeBird",
+      twits: posts,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
 });
 
 // router.get('/', async (req, res, next) => {

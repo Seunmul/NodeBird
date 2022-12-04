@@ -1,4 +1,4 @@
-const passport = require("passport");
+const passport = require("passport/lib");
 const local = require("./localStrategy");
 const kakao = require("./kakaoStrategy");
 const User = require("../models/user");

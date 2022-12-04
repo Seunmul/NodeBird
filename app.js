@@ -6,7 +6,7 @@ const path = require("path");
 const session = require("express-session");
 const nunjucks = require("nunjucks");
 const dotenv = require("dotenv");
-const passport = require("passport");
+const passport = require("passport/lib");
 
 dotenv.config();
 const pageRouter = require("./routes/page");
